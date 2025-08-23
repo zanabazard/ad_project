@@ -20,7 +20,7 @@ public interface CabRepository extends JpaRepository<Cab, Long> {
         select (count(r) = 0) from Ride r
         where r.cab.id = :cabId
           and r.status in ('OPEN','ONGOING')
-          and r.startTime < :end and r.endTime > :start
+          and r.startTime < :end and r.startTime > :start
     """)
     boolean isCabFree(Long cabId, LocalDateTime start, LocalDateTime end);
 
@@ -32,7 +32,7 @@ public interface CabRepository extends JpaRepository<Cab, Long> {
          select 1 from Ride r
          where r.cab = c
            and r.status in ('OPEN','ONGOING')
-           and r.startTime < :end and r.endTime > :start
+           and r.startTime < :end and r.startTime > :start
       )
     order by c.plate asc
 """)

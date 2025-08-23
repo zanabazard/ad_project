@@ -8,10 +8,12 @@ import com.cab21.delivery.repository.RideRepository;
 import com.cab21.delivery.repository.UserRepository;
 import com.cab21.delivery.service.BookingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Service
@@ -32,13 +34,13 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new IllegalArgumentException("ride not found"));
 
         if (!"OPEN".equalsIgnoreCase(ride.getStatus())) {
-            throw new IllegalStateException("Явахад нээлттэй болоогүй байна");
+            throw new ResponseStatusException( HttpStatus.CONFLICT,"Явахад нээлттэй болоогүй байна");
         }
         if (bookingRepo.existsByRideIdAndUserId(rideId, userId)) {
-            throw new IllegalStateException("Аль хэдийн бүртгүүлсэн байна");
+            throw new ResponseStatusException( HttpStatus.CONFLICT,"Аль хэдийн бүртгүүлсэн байна");
         }
         if (ride.getPassengerCount() >= ride.getCapacity()) {
-            throw new IllegalStateException("Хүн дүүрсэн байна (4 passengers max)");
+            throw new ResponseStatusException( HttpStatus.CONFLICT,"Хүн дүүрсэн байна (4 passengers max)");
         }
 
         User user = userRepo.findById(userId)

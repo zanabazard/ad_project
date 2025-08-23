@@ -24,11 +24,9 @@ public class Ride {
     @Column(name = "start_time", nullable = false)
     private Date startTime;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "end_time", nullable = false)
-    private Date endTime;
-
+    @Column(name = "start_place")
     private String startPlace;
+    @Column(name = "end_place")
     private String endPlace;
 
     @Column(nullable = false)
