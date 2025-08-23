@@ -16,22 +16,40 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CabController {
     private final CabService cabService;
-
+    /***
+     * 	   Такси нэмэх сервис
+     */
     @PostMapping("create")
     public ResponseEntity<CabDto> create(@RequestBody CreateCabRequest req) {
         return ResponseEntity.ok(cabService.create(req));
     }
-
+    /***
+     * 	   Такси id-аар нь авах сервис
+     */
     @GetMapping("/{id}")
     public ResponseEntity<CabDto> get(@PathVariable Long id) {
         return ResponseEntity.ok(cabService.get(id));
     }
 
-    @GetMapping
+    /***
+     * 	   Хэрэглэгчийн id-аар нь авах сервис
+     */
+    @GetMapping("/user/{id}")
+    public ResponseEntity<CabDto> getByUserId(@PathVariable Long id) {
+        return ResponseEntity.ok(cabService.getByUserId(id));
+    }
+
+    /***
+     * 	   Таксины жагсаалт сервис
+     */
+    @GetMapping("/list")
     public ResponseEntity<List<CabDto>> list() {
         return ResponseEntity.ok(cabService.list());
     }
 
+    /***
+     * 	   Хоосон суудалтай байгаа сервис
+     */
     @GetMapping("/available")
     public ResponseEntity<List<CabDto>> available(
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,

@@ -39,6 +39,13 @@ public class CabServiceImpl implements CabService {
     }
 
     @Override
+    public CabDto getByUserId(Long id) {
+        Cab c = cabRepo.findByDriverId(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "cab not found"));
+        return CabDto.from(c);
+    }
+
+    @Override
     public List<CabDto> list() {
         return cabRepo.findAll().stream().map(CabDto::from).toList();
     }

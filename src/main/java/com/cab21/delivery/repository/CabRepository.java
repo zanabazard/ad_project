@@ -3,7 +3,6 @@ package com.cab21.delivery.repository;
 import com.cab21.delivery.model.Cab;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,8 +14,8 @@ public interface CabRepository extends JpaRepository<Cab, Long> {
     boolean existsByPlate(String plate);
     List<Cab> findByStatus(Integer status);
     List<Cab> findByPassengerSeatsGreaterThanEqual(Integer minSeats);
+    Optional<Cab> findByDriverId(Long id);
 
-    // is this cab free in a time window? (no overlapping OPEN/ONGOING rides)
     @Query("""
         select (count(r) = 0) from Ride r
         where r.cab.id = :cabId
@@ -25,7 +24,6 @@ public interface CabRepository extends JpaRepository<Cab, Long> {
     """)
     boolean isCabFree(Long cabId, LocalDateTime start, LocalDateTime end);
 
-    // list of available cabs for a window + minimum seats
     @Query("""
     select c from Cab c
     where c.status = 1
