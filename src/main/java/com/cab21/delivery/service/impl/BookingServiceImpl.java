@@ -40,13 +40,14 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new IllegalArgumentException("ride not found"));
 
         if (!"OPEN".equalsIgnoreCase(ride.getStatus())) {
-            throw new ResponseStatusException( HttpStatus.CONFLICT,"Явахад нээлттэй болоогүй байна");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Явахад нээлттэй болоогүй байна");
         }
         if (bookingRepo.existsByRideIdAndUserId(request.getRideId(), userId)) {
-            throw new ResponseStatusException( HttpStatus.CONFLICT,"Аль хэдийн бүртгүүлсэн байна");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Аль хэдийн бүртгүүлсэн байна");
         }
         if (ride.getCapacity() - ride.getPassengerCount() < request.getSeatCount()) {
-            throw new ResponseStatusException( HttpStatus.CONFLICT,"Хүн дүүрсэн байна ( Ихдээ " + ride.getCapacity() + " зорчигчтой байх боломжтой)");
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Хүн дүүрсэн байна ( Ихдээ " + ride.getCapacity() + " зорчигчтой байх боломжтой)");
         }
 
         User user = userRepo.findById(userId)
@@ -60,7 +61,7 @@ public class BookingServiceImpl implements BookingService {
         bookingRepo.save(b);
 
         ride.setPassengerCount(ride.getPassengerCount() + request.getSeatCount());
-        if(ride.getPassengerCount() == ride.getCapacity()) {
+        if (ride.getPassengerCount() == ride.getCapacity()) {
             ride.setStatus("FULL");
         }
         rideRepo.save(ride);
@@ -87,20 +88,20 @@ public class BookingServiceImpl implements BookingService {
     }
 
     public ResponseEntity<Void> cancelByDriver(BookingDto bookingDto) {
-    Booking b = bookingRepo.findByIdAndRide_DriverUserIdAndStatus(bookingDto.getId(),  "BOOKED")
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Active booking not found"));
+        Booking b = bookingRepo.findByIdAndStatus(bookingDto.getId(), "BOOKED")
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Active booking not found"));
 
-    Ride r = b.getRide();
-    if (!"OPEN".equalsIgnoreCase(r.getStatus())) {
-        throw new ResponseStatusException(HttpStatus.CONFLICT, "Ride is not OPEN");
-    }
+        Ride r = b.getRide();
+        if (!"OPEN".equalsIgnoreCase(r.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ride is not OPEN");
+        }
 
-    b.setStatus("CANCELLED_BY_DRIVER");
-    bookingRepo.save(b);
+        b.setStatus("CANCELLED_BY_DRIVER");
+        bookingRepo.save(b);
 
-    r.setPassengerCount(Math.max(0, r.getPassengerCount() - 1));
-    rideRepo.save(r);
+        r.setPassengerCount(Math.max(0, r.getPassengerCount() - 1));
+        rideRepo.save(r);
 
-    return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 }
