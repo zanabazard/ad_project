@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class BookingRequest {
     private Long rideId;
-    private Long seatCount;
+    private int seatCount;
 }
