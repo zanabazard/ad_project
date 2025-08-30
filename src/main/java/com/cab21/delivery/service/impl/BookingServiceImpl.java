@@ -56,6 +56,10 @@ public class BookingServiceImpl implements BookingService {
         bookingRepo.save(b);
 
         ride.setPassengerCount(ride.getPassengerCount() + request.getSeatCount());
+        if(ride.getPassengerCount() == ride.getCapacity()) {
+            ride.setStatus("FULL");
+        }
+        rideRepo.save(ride);
         return b.getId();
     }
 
