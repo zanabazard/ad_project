@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(
         name = "bookings",
@@ -18,6 +20,7 @@ public class Booking {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "ride_id")
+    @JsonBackReference
     private Ride ride;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -26,6 +29,9 @@ public class Booking {
 
     @Column(nullable = false, length = 32)
     private String status = "BOOKED";
+
+    @Column(nullable = false, length = 32)
+    private int seat;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false, insertable = false)

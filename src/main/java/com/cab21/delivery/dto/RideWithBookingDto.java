@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RideDto {
+public class RideWithBookingDto {
     private Long id;
     private Long cabId;
     private Date startTime;
@@ -23,9 +23,10 @@ public class RideDto {
     private String status;
     private int capacity;
     private int passengerCount;
+    private List<Booking> booking;
 
-    public static RideDto from(Ride r) {
-        return RideDto.builder()
+    public static RideWithBookingDto from(Ride r, List<Booking> b) {
+        return RideWithBookingDto.builder()
                 .id(r.getId())
                 .cabId(r.getCab().getId())
                 .startTime(r.getStartTime())
@@ -34,6 +35,7 @@ public class RideDto {
                 .status(r.getStatus())
                 .capacity(r.getCapacity())
                 .passengerCount(r.getPassengerCount())
+                .booking(b)
                 .build();
     }
 }

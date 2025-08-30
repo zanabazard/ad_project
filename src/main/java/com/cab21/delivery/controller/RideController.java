@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cab21.delivery.dto.RideDto;
+import com.cab21.delivery.dto.RideWithBookingDto;
 import com.cab21.delivery.dto.request.CreateRideRequest;
 import com.cab21.delivery.service.RideService;
 
@@ -32,7 +33,7 @@ public class RideController {
      * 	   Зарыг id-аар нь авах сервис
      */
     @GetMapping("/{id}")
-    public ResponseEntity<RideDto> get(@PathVariable Long id) {
+    public ResponseEntity<RideWithBookingDto> get(@PathVariable Long id) {
         return rideService.get(id);
     }
 }

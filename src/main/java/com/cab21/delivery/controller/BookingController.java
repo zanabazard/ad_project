@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cab21.delivery.dto.BookingResult;
 import com.cab21.delivery.dto.SeatStatusDto;
+import com.cab21.delivery.dto.BookingDto;
 import com.cab21.delivery.dto.request.BookingRequest;
 import com.cab21.delivery.model.Ride;
 import com.cab21.delivery.model.User;
@@ -63,5 +65,13 @@ public class BookingController {
                 r.getPassengerCount(),
                 Math.max(0, r.getCapacity() - r.getPassengerCount())
         ));
+    }
+
+    /***
+     * 	   Зар-с хасах сервис
+     */
+    @PatchMapping("/bookings/{bookingId}/cancel-by-driver")
+    public ResponseEntity<Void> cancelByDriver(@RequestBody BookingDto bookingDto) {
+    return bookingService.cancelByDriver(bookingDto);
     }
 }
