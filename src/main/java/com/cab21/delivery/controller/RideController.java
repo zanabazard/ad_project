@@ -1,12 +1,18 @@
 package com.cab21.delivery.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.cab21.delivery.dto.RideDto;
 import com.cab21.delivery.dto.request.CreateRideRequest;
-import com.cab21.delivery.model.Ride;
 import com.cab21.delivery.service.RideService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/rides")
