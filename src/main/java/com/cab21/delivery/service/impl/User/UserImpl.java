@@ -91,11 +91,12 @@ public class UserImpl implements UserService {
             String email = req.getEmail().trim();
             if (!email.isBlank()) {
                 if (users.existsByEmailAndIdNot(email, u.getId())) {
-                    throw new IllegalArgumentException("email already exists");
+                    u.setEmail(email);
+                } else if (users.existsByEmail(email)) {
+                    throw new IllegalArgumentException("и-мэйл аль хэдийн бүртгэгдсэн байна");
                 }
-                u.setEmail(email);
+             
             } else {
-                // choose policy: clear or ignore when blank
                 u.setEmail(null);
             }
         }
