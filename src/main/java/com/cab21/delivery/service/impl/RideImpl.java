@@ -41,7 +41,7 @@ public class RideImpl implements RideService {
 
         Ride r = new Ride();
         r.setCab(cab);
-        r.setCapacity(cab.getPassengerSeats());
+        r.setCapacity(req.getPassengerSeat()());
         r.setStartTime(req.getStartTime());
         r.setStartPlace(req.getStartPlace());
         r.setEndPlace(req.getEndPlace());

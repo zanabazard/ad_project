@@ -1,17 +1,19 @@
 package com.cab21.delivery.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.cab21.delivery.dto.CabDto;
 import com.cab21.delivery.dto.request.CreateCabRequest;
 import com.cab21.delivery.model.Cab;
 import com.cab21.delivery.repository.CabRepository;
 import com.cab21.delivery.service.CabService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class CabServiceImpl implements CabService {
         c.setModel(req.getModel());
         c.setDriverName(req.getDriverName());
         c.setDriverId(req.getDriverId());
-        c.setPassengerSeats(req.getPassengerSeats() == null ? 4 : req.getPassengerSeats());
+        c.setPassengerSeats(req.getPassengerSeats());
         c.setStatus(1); // active
         cabRepo.save(c);
         return CabDto.from(c);
