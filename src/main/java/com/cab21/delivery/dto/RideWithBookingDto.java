@@ -1,14 +1,16 @@
 package com.cab21.delivery.dto;
 
-import com.cab21.delivery.model.Ride;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
 import com.cab21.delivery.model.Booking;
+import com.cab21.delivery.model.Ride;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
-
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -23,6 +25,7 @@ public class RideWithBookingDto {
     private String status;
     private int capacity;
     private int passengerCount;
+    private BigDecimal ticketPrice;
     private List<Booking> booking;
 
     public static RideWithBookingDto from(Ride r, List<Booking> b) {
@@ -35,6 +38,7 @@ public class RideWithBookingDto {
                 .status(r.getStatus())
                 .capacity(r.getCapacity())
                 .passengerCount(r.getPassengerCount())
+                .ticketPrice(r.getTicketPrice())
                 .booking(b)
                 .build();
     }
