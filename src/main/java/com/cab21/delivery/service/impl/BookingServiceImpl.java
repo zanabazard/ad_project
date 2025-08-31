@@ -6,12 +6,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.cab21.delivery.dto.request.BookingRequest;
 import com.cab21.delivery.dto.BookingDto;
+import com.cab21.delivery.dto.request.BookingRequest;
 import com.cab21.delivery.model.Booking;
 import com.cab21.delivery.model.Ride;
 import com.cab21.delivery.model.User;
@@ -87,7 +86,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     public ResponseEntity<Void> cancelByDriver(BookingDto bookingDto) {
-    Booking b = bookingRepo.findByIdAndRide_DriverUserIdAndStatus(bookingDto.getId(),  "BOOKED")
+    Booking b = bookingRepo.findByIdAndStatus(bookingDto.getId(),  "BOOKED")
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Active booking not found"));
 
     Ride r = b.getRide();
