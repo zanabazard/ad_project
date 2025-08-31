@@ -1,5 +1,6 @@
 package com.cab21.delivery.dto.request;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.antlr.v4.runtime.misc.NotNull;
@@ -20,4 +21,5 @@ public class CreateRideRequest {
     private String startPlace;
     private String endPlace;
     private Integer passengerSeat;
+    private BigDecimal ticketPrice;
 }

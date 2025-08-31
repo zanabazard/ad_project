@@ -47,6 +47,7 @@ public class RideImpl implements RideService {
         r.setStartTime(req.getStartTime());
         r.setStartPlace(req.getStartPlace());
         r.setEndPlace(req.getEndPlace());
+        r.setTicketPrice(req.getTicketPrice());
         r.setStatus("OPEN");
 
         rideRepo.save(r);
