@@ -1,10 +1,12 @@
 package com.cab21.delivery.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
+import java.util.Date;
+
 import org.antlr.v4.runtime.misc.NotNull;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.Data;
 
 @Data
 public class CreateRideRequest {
@@ -17,4 +19,5 @@ public class CreateRideRequest {
 
     private String startPlace;
     private String endPlace;
+    private Integer passengerSeat;
 }
