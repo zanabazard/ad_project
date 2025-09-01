@@ -40,13 +40,13 @@ public class RideImpl implements RideService {
 
     public RideImpl(RideRepository rideRepo, CabRepository cabRepo, BookingRepository bookingRepo, GridRepo gridRepo) {
         this.rideRepo = rideRepo;
-        this.cabRepo  = cabRepo;
+        this.cabRepo = cabRepo;
         this.bookingRepo = bookingRepo;
         this.gridRepo = gridRepo;
     }
 
     @Override
-    public ResponseEntity<RideDto> create (CreateRideRequest req) {
+    public ResponseEntity<RideDto> create(CreateRideRequest req) {
         Cab cab = cabRepo.findById(req.getCabId())
                 .orElseThrow(() -> new IllegalArgumentException("cab not found"));
 
@@ -56,6 +56,7 @@ public class RideImpl implements RideService {
         r.setStartTime(req.getStartTime());
         r.setStartPlace(req.getStartPlace());
         r.setEndPlace(req.getEndPlace());
+        r.setTicketPrice(req.getTicketPrice());
         r.setStatus("OPEN");
 
         rideRepo.save(r);
@@ -63,7 +64,8 @@ public class RideImpl implements RideService {
     }
 
     public ResponseEntity<RideWithBookingDto> get(@PathVariable Long id) {
-        Ride r = rideRepo.findOneWithCabAndBookings(id).orElseThrow(() -> new IllegalArgumentException("ride not found"));
+        Ride r = rideRepo.findOneWithCabAndBookings(id)
+                .orElseThrow(() -> new IllegalArgumentException("ride not found"));
         List<Booking> bookings = bookingRepo.findByRideId(r.getId());
         return ResponseEntity.ok(RideWithBookingDto.from(r, bookings));
     }

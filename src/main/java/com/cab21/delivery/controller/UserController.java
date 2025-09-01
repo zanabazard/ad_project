@@ -5,6 +5,7 @@ import com.cab21.delivery.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.cab21.delivery.model.User;
 
 @RestController
 @RequestMapping("/api/user")
@@ -14,15 +15,20 @@ public class UserController {
     private final UserService userService;
 
     /***
-     * 	   Хэрэглэгч үүсгэх сервис
+     * Хэрэглэгч үүсгэх сервис
      */
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@RequestBody CreateUserRequest request) {
         return ResponseEntity.ok().body(userService.createUser(request));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(userService.getUserById(id));
+    }
+
     /***
-     * 	   Хэрэглэгчийн мэдээлэл засах сервис
+     * Хэрэглэгчийн мэдээлэл засах сервис
      */
     @PostMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody CreateUserRequest request) {
@@ -30,7 +36,7 @@ public class UserController {
     }
 
     /***
-     * 	   Хэрэглэгчийн төлөв идэвхгүй болгох сервис
+     * Хэрэглэгчийн төлөв идэвхгүй болгох сервис
      */
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<String> deactivate(@PathVariable Long id) {
@@ -38,7 +44,7 @@ public class UserController {
     }
 
     /***
-     * 	   Хэрэглэгчийн төлөв идэвхтэй болгох сервис
+     * Хэрэглэгчийн төлөв идэвхтэй болгох сервис
      */
     @PutMapping("/{id}/reactivate")
     public ResponseEntity<String> reactivate(@PathVariable Long id) {
