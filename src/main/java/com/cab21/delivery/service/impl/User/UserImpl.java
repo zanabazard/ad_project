@@ -19,7 +19,6 @@ public class UserImpl implements UserService {
     private final UserRepository users;
     private final PasswordEncoder encoder;
 
-
     public UserImpl(UserRepository users, PasswordEncoder encoder) {
         this.users = users;
         this.encoder = encoder;
@@ -48,7 +47,7 @@ public class UserImpl implements UserService {
         u.setBirthday(req.getBirthday());
         u.setRegistryNumber(req.getRegistryNumber());
         u.setStatus(1);
-        if(req.getRole() == null){
+        if (req.getRole() == null) {
             u.setRole("user");
         } else {
             u.setRole(req.getRole());
@@ -95,7 +94,7 @@ public class UserImpl implements UserService {
                 } else if (users.existsByEmail(email)) {
                     throw new IllegalArgumentException("и-мэйл аль хэдийн бүртгэгдсэн байна");
                 }
-             
+
             } else {
                 u.setEmail(null);
             }
@@ -111,12 +110,14 @@ public class UserImpl implements UserService {
     @Override
     @Transactional
     public String deactivateUser(Long id) {
-        if (id == null) throw new IllegalArgumentException("id is required");
+        if (id == null)
+            throw new IllegalArgumentException("id is required");
 
         User u = users.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
 
-        if (u.getStatus() == 0) return "already inactive";
+        if (u.getStatus() == 0)
+            return "already inactive";
 
         u.setStatus(0);
         users.save(u);
@@ -128,7 +129,8 @@ public class UserImpl implements UserService {
         User u = users.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
 
-        if (u.getStatus() == 1) return "already active";
+        if (u.getStatus() == 1)
+            return "already active";
 
         if (users.existsByUsernameAndStatus(u.getUsername(), 1))
             throw new IllegalArgumentException("username already taken by an active user");
@@ -138,5 +140,11 @@ public class UserImpl implements UserService {
         u.setStatus(1);
         users.save(u);
         return "success";
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return users.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("user not found"));
     }
 }

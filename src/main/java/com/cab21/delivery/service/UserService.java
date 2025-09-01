@@ -2,8 +2,9 @@ package com.cab21.delivery.service;
 
 import com.cab21.delivery.dto.request.User.CreateUserRequest;
 import com.cab21.delivery.dto.request.User.UpdateUserRequest;
+import com.cab21.delivery.model.User;
 
-public interface  UserService {
+public interface UserService {
 
     String createUser(CreateUserRequest req);
 
@@ -12,4 +13,6 @@ public interface  UserService {
     String deactivateUser(Long id);
 
     String reactivateUser(Long id);
+
+    User getUserById(Long id);
 }
