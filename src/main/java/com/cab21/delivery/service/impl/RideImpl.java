@@ -70,8 +70,21 @@ public class RideImpl implements RideService {
 
     @Override
     public GridResponse getGrid(GridRequest request) {
-        String sql = """
-             SELECT * FROM rides as r LEFT JOIN bookings as b on b.ride_id = r.id;
+   String sql = """
+        SELECT
+            r.id AS id,                 
+            r.id AS ride_id,
+            r.driver_user_id,
+            DATE_FORMAT(r.start_time, '%Y-%m-%d %H:%i:%s') as start_time,
+            r.start_place,
+            r.end_place,
+            r.ticket_price,
+            r.status AS ride_status,
+            b.id AS booking_id,
+            b.user_id AS booking_user_id,
+            b.status AS booking_status
+        FROM rides r
+        LEFT JOIN bookings b ON b.ride_id = r.id
         """;
         return gridRepo.getDatatable(sql, request, true);
     }
