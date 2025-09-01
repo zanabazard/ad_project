@@ -14,6 +14,8 @@ import com.cab21.delivery.dto.request.CreateRideRequest;
 import com.cab21.delivery.service.RideService;
 
 import lombok.RequiredArgsConstructor;
+import nm.common.grid.request.GridRequest;
+import nm.common.grid.response.GridResponse;
 
 @RestController
 @RequestMapping("/api/rides")
@@ -36,4 +38,10 @@ public class RideController {
     public ResponseEntity<RideWithBookingDto> get(@PathVariable Long id) {
         return rideService.get(id);
     }
+
+    @PostMapping("/checklist/grid")
+    public GridResponse getInspectionGrid(@RequestBody GridRequest request) {
+        return rideService.getGrid(request);
+    }
+
 }

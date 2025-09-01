@@ -2,6 +2,7 @@ package com.cab21.delivery.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,10 @@ import com.cab21.delivery.repository.CabRepository;
 import com.cab21.delivery.repository.RideRepository;
 import com.cab21.delivery.service.RideService;
 
+import nm.common.grid.repo.GridRepo;
+import nm.common.grid.request.GridRequest;
+import nm.common.grid.response.GridResponse;
+
 @Service
 @EnableWebMvc
 @EnableAsync
@@ -30,10 +35,14 @@ public class RideImpl implements RideService {
 
     private final BookingRepository bookingRepo;
 
-    public RideImpl(RideRepository rideRepo, CabRepository cabRepo, BookingRepository bookingRepo) {
+    @Autowired
+    GridRepo gridRepo;
+
+    public RideImpl(RideRepository rideRepo, CabRepository cabRepo, BookingRepository bookingRepo, GridRepo gridRepo) {
         this.rideRepo = rideRepo;
         this.cabRepo = cabRepo;
         this.bookingRepo = bookingRepo;
+        this.gridRepo = gridRepo;
     }
 
     @Override
@@ -61,4 +70,11 @@ public class RideImpl implements RideService {
         return ResponseEntity.ok(RideWithBookingDto.from(r, bookings));
     }
 
+    @Override
+    public GridResponse getGrid(GridRequest request) {
+        String sql = """
+             SELECT * FROM rides as r LEFT JOIN bookings as b on b.ride_id = r.id;
+        """;
+        return gridRepo.getDatatable(sql, request, true);
+    }
 }
