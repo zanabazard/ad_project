@@ -87,13 +87,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     public ResponseEntity<Void> cancelByDriver(BookingDto bookingDto) {
-<<<<<<< HEAD
-        Booking b = bookingRepo.findByIdAndStatus(bookingDto.getId(), "BOOKED")
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Active booking not found"));
-=======
     Booking b = bookingRepo.findByIdAndStatus(bookingDto.getId(),  "BOOKED")
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Active booking not found"));
->>>>>>> c43348fd7b504748de8e6ce2c7998b384f730c26
 
         Ride r = b.getRide();
         if (!"OPEN".equalsIgnoreCase(r.getStatus())) {
