@@ -73,7 +73,7 @@ public class RideImpl implements RideService {
     @Override
     public GridResponse getGrid(GridRequest request) {
    String sql = """
-        SELECT
+       SELECT
             r.id AS id,                 
             r.id AS ride_id,
             r.driver_user_id,
@@ -84,9 +84,14 @@ public class RideImpl implements RideService {
             r.status AS ride_status,
             b.id AS booking_id,
             b.user_id AS booking_user_id,
-            b.status AS booking_status
+            b.status AS booking_status,
+            c.plate,
+            c.model,
+            r.capacity,
+            r.passenger_count
         FROM rides r
         LEFT JOIN bookings b ON b.ride_id = r.id
+        LEFT JOIN cabs c ON c.id = r.cab_id
         """;
         return gridRepo.getDatatable(sql, request, true);
     }
