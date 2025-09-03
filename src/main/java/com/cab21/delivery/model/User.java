@@ -2,7 +2,6 @@ package com.cab21.delivery.model;
 
 import java.util.Date;
 
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.Data;
 
 @Entity
 @Table(name = "users",
@@ -47,6 +47,9 @@ public class User {
 
     @Column(nullable = false, length = 10)
     private String role;
+
+    @Column(length = 45)
+    private String phone;
 
     @Column(length = 100)
     private int status;

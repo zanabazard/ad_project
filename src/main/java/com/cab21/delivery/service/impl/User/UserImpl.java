@@ -1,14 +1,15 @@
 package com.cab21.delivery.service.impl.User;
 
-import com.cab21.delivery.dto.request.User.UpdateUserRequest;
-import com.cab21.delivery.service.UserService;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import com.cab21.delivery.dto.request.User.CreateUserRequest;
+import com.cab21.delivery.dto.request.User.UpdateUserRequest;
 import com.cab21.delivery.model.User;
 import com.cab21.delivery.repository.UserRepository;
-import com.cab21.delivery.dto.request.User.CreateUserRequest;
+import com.cab21.delivery.service.UserService;
 
 import jakarta.transaction.Transactional;
 
@@ -46,6 +47,7 @@ public class UserImpl implements UserService {
         u.setLastName(req.getLastName());
         u.setBirthday(req.getBirthday());
         u.setRegistryNumber(req.getRegistryNumber());
+        u.setPhone(req.getPhone());
         u.setStatus(1);
         if (req.getRole() == null) {
             u.setRole("user");
@@ -103,6 +105,7 @@ public class UserImpl implements UserService {
         u.setLastName(req.getLastName());
         u.setBirthday(req.getBirthday());
         u.setRegistryNumber(req.getRegistryNumber());
+        u.setPhone(req.getPhone());
         users.save(u);
         return "success";
     }

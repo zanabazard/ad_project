@@ -1,8 +1,8 @@
 package com.cab21.delivery.dto.request.User;
 
-import lombok.Data;
-
 import java.util.Date;
+
+import lombok.Data;
 @Data
 public class UpdateUserRequest {
     private Long id;
@@ -14,4 +14,6 @@ public class UpdateUserRequest {
     private String password;
     private String email;
     private String role;
+    private String phone;
+
 }
