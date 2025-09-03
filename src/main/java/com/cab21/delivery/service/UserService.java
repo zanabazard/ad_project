@@ -4,6 +4,9 @@ import com.cab21.delivery.dto.request.User.CreateUserRequest;
 import com.cab21.delivery.dto.request.User.UpdateUserRequest;
 import com.cab21.delivery.model.User;
 
+import nm.common.grid.request.GridRequest;
+import nm.common.grid.response.GridResponse;
+
 public interface UserService {
 
     String createUser(CreateUserRequest req);
@@ -15,4 +18,6 @@ public interface UserService {
     String reactivateUser(Long id);
 
     User getUserById(Long id);
+
+    GridResponse getGrid(GridRequest request);
 }

@@ -12,6 +12,8 @@ import com.cab21.delivery.repository.UserRepository;
 import com.cab21.delivery.service.UserService;
 
 import jakarta.transaction.Transactional;
+import nm.common.grid.request.GridRequest;
+import nm.common.grid.response.GridResponse;
 
 @Service
 @EnableWebMvc
@@ -149,5 +151,32 @@ public class UserImpl implements UserService {
     public User getUserById(Long id) {
         return users.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
+    }
+
+    @Override
+    public GridResponse getGrid(GridRequest request) {
+   String sql = """
+       SELECT
+            u.id AS id,                 
+            u.username AS username,
+            u.first_name AS first_name,
+            
+            u.last_name AS last_name,
+            u.birthday AS birthday,
+            u.registry_number AS registry_number,
+            u.phone AS phone,
+            u.role AS role,
+            u.status AS status,
+            u.email AS email,
+            DATE_FORMAT(u.created_at, '%Y-%m-%d %H:%i:%s') as created_at,
+            DATE_FORMAT(u.updated_at, '%Y-%m-%d %H:%i:%s') as updated_at,
+            c.plate AS cab_plate,
+            c.model AS cab_model,
+            c.passenger_seat AS cab_passenger_seat,
+            c.status AS cab_status
+        FROM users u
+        LEFT JOIN cabs c ON c.driver_id = u.id
+        """;
+        return gridRepo.getDatatable(sql, request, true);
     }
 }
