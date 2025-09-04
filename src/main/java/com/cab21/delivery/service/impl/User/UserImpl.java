@@ -92,20 +92,6 @@ public class UserImpl implements UserService {
             u.setPasswordHash(encoder.encode(pw));
         }
 
-        // email (allow clearing with blank if you want; or ignore blank)
-        if (req.getEmail() != null) {
-            String email = req.getEmail().trim();
-            if (!email.isBlank()) {
-                if (users.existsByEmailAndIdNot(email, u.getId())) {
-                    u.setEmail(email);
-                } else if (users.existsByEmail(email)) {
-                    throw new IllegalArgumentException("и-мэйл аль хэдийн бүртгэгдсэн байна");
-                }
-
-            } else {
-                u.setEmail(null);
-            }
-        }
         u.setFirstName(req.getFirstName());
         u.setLastName(req.getLastName());
         u.setBirthday(req.getBirthday());
