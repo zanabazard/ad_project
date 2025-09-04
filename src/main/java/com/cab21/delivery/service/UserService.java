@@ -3,6 +3,7 @@ package com.cab21.delivery.service;
 import com.cab21.delivery.dto.request.User.ChangePasswordRequest;
 import com.cab21.delivery.dto.request.User.CreateUserRequest;
 import com.cab21.delivery.dto.request.User.UpdateUserRequest;
+import com.cab21.delivery.dto.response.LoginResponse;
 import com.cab21.delivery.model.User;
 
 import nm.common.grid.request.GridRequest;
@@ -12,7 +13,7 @@ public interface UserService {
 
     String createUser(CreateUserRequest req);
 
-    String updateUser(UpdateUserRequest req);
+    LoginResponse updateUser(UpdateUserRequest req);
 
     String deactivateUser(Long id);
 

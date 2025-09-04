@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cab21.delivery.dto.request.User.ChangePasswordRequest;
 import com.cab21.delivery.dto.request.User.CreateUserRequest;
 import com.cab21.delivery.dto.request.User.UpdateUserRequest;
+import com.cab21.delivery.dto.response.LoginResponse;
 import com.cab21.delivery.model.User;
 import com.cab21.delivery.service.UserService;
 import org.springframework.security.core.Authentication;
@@ -41,7 +42,7 @@ public class UserController {
      * Хэрэглэгчийн мэдээлэл засах сервис
      */
     @PostMapping("/update")
-    public ResponseEntity<String> updateUser(@RequestBody UpdateUserRequest request) {
+    public ResponseEntity<LoginResponse> updateUser(@RequestBody UpdateUserRequest request) {
         return ResponseEntity.ok().body(userService.updateUser(request));
     }
 

@@ -1,16 +1,25 @@
 package com.cab21.delivery.service.impl.User;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.cab21.delivery.dto.UserDto;
 import com.cab21.delivery.dto.request.User.ChangePasswordRequest;
 import com.cab21.delivery.dto.request.User.CreateUserRequest;
 import com.cab21.delivery.dto.request.User.UpdateUserRequest;
+import com.cab21.delivery.dto.response.LoginResponse;
 import com.cab21.delivery.model.User;
 import com.cab21.delivery.repository.UserRepository;
+import com.cab21.delivery.security.JwtService;
 import com.cab21.delivery.service.UserService;
 
 import jakarta.transaction.Transactional;
@@ -24,12 +33,16 @@ import nm.common.grid.response.GridResponse;
 public class UserImpl implements UserService {
     private final UserRepository users;
     private final PasswordEncoder encoder;
+    private final AuthenticationManager authManager;
+    private final JwtService jwtService;
      @Autowired
     GridRepo gridRepo;
 
-    public UserImpl(UserRepository users, PasswordEncoder encoder, GridRepo gridRepo) {
+    public UserImpl(UserRepository users, PasswordEncoder encoder, AuthenticationManager authManager, JwtService jwtService, GridRepo gridRepo) {
         this.users = users;
         this.encoder = encoder;
+        this.authManager = authManager;
+        this.jwtService = jwtService;
         this.gridRepo = gridRepo;
     }
 
@@ -65,7 +78,7 @@ public class UserImpl implements UserService {
     }
 
     @Transactional
-    public String updateUser(UpdateUserRequest req) {
+    public LoginResponse updateUser(UpdateUserRequest req) {
         if (req.getId() == null) {
             throw new IllegalArgumentException("id is required");
         }
@@ -98,7 +111,34 @@ public class UserImpl implements UserService {
         u.setRegistryNumber(req.getRegistryNumber());
         u.setPhone(req.getPhone());
         users.save(u);
-        return "success";
+        Authentication auth = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
+
+        String token = jwtService.generateToken(
+                u.getUsername(),
+                Map.of("role", u.getRole(), "uid", u.getId())
+        );
+
+        UserDto dto = toDto(u);
+
+        return LoginResponse.builder()
+                .token(token)
+                .type("Bearer")
+                .user(dto)
+                .build();
+    }
+
+    private static UserDto toDto(User u) {
+        return UserDto.builder()
+                .id(u.getId())
+                .username(u.getUsername())
+                .firstName(u.getFirstName())
+                .lastName(u.getLastName())
+                .email(u.getEmail())
+                .role(u.getRole())
+                .birthday(u.getBirthday())
+                .registryNumber(u.getRegistryNumber())
+                .build();
     }
 
     @Override
