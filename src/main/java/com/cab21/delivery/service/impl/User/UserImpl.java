@@ -137,8 +137,8 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        return users.findById(id)
+    public User getUserByPhone(String phone) {
+        return users.findByPhone(phone)
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
     }
 

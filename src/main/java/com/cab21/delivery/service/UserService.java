@@ -18,7 +18,7 @@ public interface UserService {
 
     String reactivateUser(Long id);
 
-    User getUserById(Long id);
+    User getUserByPhone(String phone);
 
     GridResponse getGrid(GridRequest request);
 

@@ -14,7 +14,7 @@ import com.cab21.delivery.dto.request.User.CreateUserRequest;
 import com.cab21.delivery.dto.request.User.UpdateUserRequest;
 import com.cab21.delivery.model.User;
 import com.cab21.delivery.service.UserService;
-
+import org.springframework.security.core.Authentication;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -32,9 +32,9 @@ public class UserController {
         return ResponseEntity.ok().body(userService.createUser(request));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(userService.getUserById(id));
+    @GetMapping("/get")
+    public ResponseEntity<User> getUserById(Authentication auth) {
+        return ResponseEntity.ok().body(userService.getUserByPhone(auth.getName()));
     }
 
     /***
