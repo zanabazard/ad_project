@@ -94,6 +94,7 @@ public class RideImpl implements RideService {
         LEFT JOIN bookings b ON b.ride_id = r.id
         LEFT JOIN cabs c ON c.id = r.cab_id
         LEFT JOIN users u ON u.id = c.driver_id
+        GROUP BY r.id
         """;
         return gridRepo.getDatatable(sql, request, true);
     }
