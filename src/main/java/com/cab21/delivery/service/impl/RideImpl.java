@@ -89,11 +89,11 @@ public class RideImpl implements RideService {
             c.model,
             r.capacity,
             r.passenger_count,
-            u.phone
+            u.phone as phone
         FROM rides r
         LEFT JOIN bookings b ON b.ride_id = r.id
         LEFT JOIN cabs c ON c.id = r.cab_id
-        LEFT JOIN users u ON u.id = r.driver_user_id
+        LEFT JOIN users u ON u.id = c.driver_id
         """;
         return gridRepo.getDatatable(sql, request, true);
     }
