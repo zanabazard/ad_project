@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cab21.delivery.dto.request.User.ChangePasswordRequest;
 import com.cab21.delivery.dto.request.User.CreateUserRequest;
 import com.cab21.delivery.dto.request.User.UpdateUserRequest;
 import com.cab21.delivery.model.User;
@@ -65,5 +66,13 @@ public class UserController {
     @PostMapping("/grid")
     public ResponseEntity<?> getGrid(@RequestBody nm.common.grid.request.GridRequest request) {
         return ResponseEntity.ok(userService.getGrid(request));
+    }
+
+    /***
+     * Нууц үг солих сервис
+     */
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
+        return ResponseEntity.ok(userService.changePassword(request));
     }
 }

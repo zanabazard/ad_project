@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.cab21.delivery.dto.request.User.ChangePasswordRequest;
 import com.cab21.delivery.dto.request.User.CreateUserRequest;
 import com.cab21.delivery.dto.request.User.UpdateUserRequest;
 import com.cab21.delivery.model.User;
@@ -180,5 +181,15 @@ public class UserImpl implements UserService {
         LEFT JOIN cabs c ON c.driver_id = u.id
         """;
         return gridRepo.getDatatable(sql, request, true);
+    }
+
+    @Override
+    public String changePassword(ChangePasswordRequest req) {
+        User u = users.findByPhone(req.getPhone())
+                .orElseThrow(() -> new IllegalArgumentException("user not found"));
+
+        u.setPasswordHash(encoder.encode(req.getNewPassword()));
+        users.save(u);
+        return "success";
     }
 }
