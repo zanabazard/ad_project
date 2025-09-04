@@ -34,13 +34,13 @@ public class AuthImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest req) {
         Authentication auth = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
+                new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword()));
 
-        User u = users.findByUsernameAndStatus(req.getUsername(), 1) // status=1 active
+        User u = users.findByEmailAndStatus(req.getEmail(), 1) // status=1 active
                 .orElseThrow(() -> new UsernameNotFoundException("user not found or inactive"));
 
         String token = jwtService.generateToken(
-                u.getUsername(),
+                u.getEmail(),
                 Map.of("role", u.getRole(), "uid", u.getId())
         );
 
