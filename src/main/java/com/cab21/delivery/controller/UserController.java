@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cab21.delivery.dto.request.User.CreateUserRequest;
+import com.cab21.delivery.dto.request.User.UpdateUserRequest;
 import com.cab21.delivery.model.User;
 import com.cab21.delivery.service.UserService;
 
@@ -39,8 +40,8 @@ public class UserController {
      * Хэрэглэгчийн мэдээлэл засах сервис
      */
     @PostMapping("/update")
-    public ResponseEntity<String> updateUser(@RequestBody CreateUserRequest request) {
-        return ResponseEntity.ok().body(userService.createUser(request));
+    public ResponseEntity<String> updateUser(@RequestBody UpdateUserRequest request) {
+        return ResponseEntity.ok().body(userService.updateUser(request));
     }
 
     /***
