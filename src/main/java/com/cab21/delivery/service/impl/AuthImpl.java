@@ -40,7 +40,7 @@ public class AuthImpl implements AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("user not found or inactive"));
 
         String token = jwtService.generateToken(
-                u.getEmail(),
+                u.getUsername(),
                 Map.of("role", u.getRole(), "uid", u.getId())
         );
 
