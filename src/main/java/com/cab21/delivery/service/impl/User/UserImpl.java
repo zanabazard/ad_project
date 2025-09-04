@@ -34,9 +34,6 @@ public class UserImpl implements UserService {
 
     @Transactional
     public String createUser(CreateUserRequest req) {
-        if (req.getUsername() == null || req.getUsername().isBlank()) {
-            throw new IllegalArgumentException("username is required");
-        }
         if (req.getPassword() == null || req.getPassword().isBlank()) {
             throw new IllegalArgumentException("password is required");
         }
@@ -47,7 +44,7 @@ public class UserImpl implements UserService {
             throw new IllegalArgumentException("email already exists");
         }
         User u = new User();
-        u.setUsername(req.getUsername().trim());
+        u.setUsername(req.getPhone());
         u.setPasswordHash(encoder.encode(req.getPassword()));
         u.setEmail(req.getEmail());
         u.setFirstName(req.getFirstName());
