@@ -109,7 +109,11 @@ public class UserImpl implements UserService {
         u.setLastName(req.getLastName());
         u.setBirthday(req.getBirthday());
         u.setRegistryNumber(req.getRegistryNumber());
-        u.setPhone(req.getPhone());
+        if(req.getPhone() != null){
+            u.setPhone(req.getPhone());
+            u.setUsername(req.getPhone());
+        }
+        
         users.save(u);
         Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
