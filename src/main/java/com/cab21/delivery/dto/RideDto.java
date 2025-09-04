@@ -1,14 +1,12 @@
 package com.cab21.delivery.dto;
+import java.util.Date;
 
 import com.cab21.delivery.model.Ride;
-import com.cab21.delivery.model.Booking;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
-
-import java.util.Date;
 
 @Data
 @AllArgsConstructor

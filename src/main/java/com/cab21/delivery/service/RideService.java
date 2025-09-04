@@ -13,4 +13,6 @@ public interface RideService {
     ResponseEntity<RideDto> create(CreateRideRequest req);
     ResponseEntity<RideWithBookingDto> get(Long id);
     GridResponse getGrid(GridRequest request);
+    ResponseEntity<String> deleteRide(Long id);
+    ResponseEntity<RideDto> updateRide(Long id, CreateRideRequest req);
 }

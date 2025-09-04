@@ -22,4 +22,5 @@ public class CreateRideRequest {
     private String endPlace;
     private Integer passengerSeat;
     private BigDecimal ticketPrice;
+    private String status;
 }

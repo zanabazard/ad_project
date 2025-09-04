@@ -1,6 +1,7 @@
 package com.cab21.delivery.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,8 @@ import com.cab21.delivery.service.RideService;
 import lombok.RequiredArgsConstructor;
 import nm.common.grid.request.GridRequest;
 import nm.common.grid.response.GridResponse;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/api/rides")
@@ -38,10 +41,26 @@ public class RideController {
     public ResponseEntity<RideWithBookingDto> get(@PathVariable Long id) {
         return rideService.get(id);
     }
-
+     /***
+     * 	   Зарыг grid-ээр нь авах сервис
+     */
     @PostMapping("/checklist/grid")
     public GridResponse getInspectionGrid(@RequestBody GridRequest request) {
         return rideService.getGrid(request);
+    }
+     /***
+     * 	   Зарыг засах сервис
+     */
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<RideDto> updateRide(@PathVariable Long id, @RequestBody CreateRideRequest req) {
+        return rideService.updateRide(id, req);
+    }
+    /***
+    * 	   Зарыг устгах сервис
+    */
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteRide(@PathVariable Long id) {
+        return rideService.deleteRide(id);
     }
 
 }

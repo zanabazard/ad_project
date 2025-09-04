@@ -97,4 +97,32 @@ public class RideImpl implements RideService {
         """;
         return gridRepo.getDatatable(sql, request, true);
     }
+
+    @Override
+    public ResponseEntity<String> deleteRide(Long id) {
+        Ride r = rideRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ride not found"));
+        rideRepo.delete(r);
+        return ResponseEntity.ok("Ride deleted successfully");
+    }
+
+    @Override
+    public ResponseEntity<RideDto> updateRide(Long id, CreateRideRequest req) {
+        Ride r = rideRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ride not found"));
+
+        Cab cab = cabRepo.findById(req.getCabId())
+                .orElseThrow(() -> new IllegalArgumentException("cab not found"));
+
+        r.setCab(cab);
+        r.setCapacity(req.getPassengerSeat());
+        r.setStartTime(req.getStartTime());
+        r.setStartPlace(req.getStartPlace());
+        r.setEndPlace(req.getEndPlace());
+        r.setTicketPrice(req.getTicketPrice());
+        r.setStatus(req.getStatus());
+
+        rideRepo.save(r);
+        return ResponseEntity.ok(RideDto.from(r));
+    }
 }
