@@ -177,7 +177,7 @@ public class UserImpl implements UserService {
             DATE_FORMAT(u.updated_at, '%Y-%m-%d %H:%i:%s') as updated_at,
             c.plate AS cab_plate,
             c.model AS cab_model,
-            c.passenger_seat AS cab_passenger_seat,
+            c.passenger_seats AS cab_passenger_seat,
             c.status AS cab_status
         FROM users u
         LEFT JOIN cabs c ON c.driver_id = u.id
