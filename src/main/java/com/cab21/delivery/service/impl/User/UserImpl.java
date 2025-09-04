@@ -1,5 +1,6 @@
 package com.cab21.delivery.service.impl.User;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import com.cab21.delivery.repository.UserRepository;
 import com.cab21.delivery.service.UserService;
 
 import jakarta.transaction.Transactional;
+import nm.common.grid.repo.GridRepo;
 import nm.common.grid.request.GridRequest;
 import nm.common.grid.response.GridResponse;
 
@@ -21,10 +23,13 @@ import nm.common.grid.response.GridResponse;
 public class UserImpl implements UserService {
     private final UserRepository users;
     private final PasswordEncoder encoder;
+     @Autowired
+    GridRepo gridRepo;
 
-    public UserImpl(UserRepository users, PasswordEncoder encoder) {
+    public UserImpl(UserRepository users, PasswordEncoder encoder, GridRepo gridRepo) {
         this.users = users;
         this.encoder = encoder;
+        this.gridRepo = gridRepo;
     }
 
     @Transactional
