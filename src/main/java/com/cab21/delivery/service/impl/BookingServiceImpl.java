@@ -37,7 +37,9 @@ public class BookingServiceImpl implements BookingService {
         // Lock the ride row to prevent overbooking
         Ride ride = rideRepo.findByIdForUpdate(request.getRideId())
                 .orElseThrow(() -> new IllegalArgumentException("ride not found"));
-
+        if (ride.getDriverUserId() == userId) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Өөрийн үүсгэсэн зар дээр өөрөө бүртгүүлж болохгүй");
+        }
         if (!"OPEN".equalsIgnoreCase(ride.getStatus())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Явахад нээлттэй болоогүй байна");
         }
