@@ -61,12 +61,34 @@ public class BookingServiceImpl implements BookingService {
         b.setStatus("BOOKED");
         bookingRepo.save(b);
 
-        ride.setPassengerCount(ride.getPassengerCount() + request.getSeatCount());
-        if (ride.getPassengerCount() == ride.getCapacity()) {
-            ride.setStatus("FULL");
-        }
-        rideRepo.save(ride);
+        // ride.setPassengerCount(ride.getPassengerCount() + request.getSeatCount());
+        // if (ride.getPassengerCount() == ride.getCapacity()) {
+        //     ride.setStatus("FULL");
+        // }
+        // rideRepo.save(ride);
         return b.getId();
+    }
+
+    @Override
+    public ResponseEntity<String> approveBooking(Long bookingId) {
+        Booking b = bookingRepo.findByIdAndStatus(bookingId, "BOOKED")
+                .orElseThrow(() -> new IllegalArgumentException("active booking not found"));
+
+        Ride r = b.getRide();
+        if (!"OPEN".equalsIgnoreCase(r.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ride is not OPEN");
+        }
+
+        b.setStatus("APPROVED");
+        bookingRepo.save(b);
+
+        r.setPassengerCount(r.getPassengerCount() + b.getSeat());
+        if (r.getPassengerCount() >= r.getCapacity()) {
+            r.setStatus("FULL");
+        }
+        rideRepo.save(r);
+
+        return ResponseEntity.ok("Амжилттай баталгаажлаа");
     }
 
     @Override
