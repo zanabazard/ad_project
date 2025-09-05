@@ -146,7 +146,7 @@ public class BookingServiceImpl implements BookingService {
             DATE_FORMAT(b.created_at, '%Y-%m-%d %H:%i:%s') as created_at,
             u.first_name AS first_name,
             u.last_name AS last_name,
-            u.phone AS phone,
+            u.phone AS phone
         FROM bookings b
         LEFT JOIN rides r ON b.ride_id = r.id
         LEFT JOIN users u ON u.id = b.user_id
