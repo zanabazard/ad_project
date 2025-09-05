@@ -82,12 +82,14 @@ public class BookingServiceImpl implements BookingService {
 
         Ride r = b.getRide();
         if (!"OPEN".equalsIgnoreCase(r.getStatus())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ride is not OPEN");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Явахад нээлттэй болоогүй байна");
         }
 
         b.setStatus("APPROVED");
         bookingRepo.save(b);
-
+        if(r.getPassengerCount() + b.getSeat() > r.getCapacity()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Дүүрэн байна");
+        }
         r.setPassengerCount(r.getPassengerCount() + b.getSeat());
         if (r.getPassengerCount() >= r.getCapacity()) {
             r.setStatus("FULL");
