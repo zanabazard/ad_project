@@ -21,6 +21,8 @@ import com.cab21.delivery.repository.UserRepository;
 import com.cab21.delivery.service.BookingService;
 
 import lombok.RequiredArgsConstructor;
+import nm.common.grid.request.GridRequest;
+import nm.common.grid.response.GridResponse;
 
 @RestController
 @RequestMapping("/api/booking")
@@ -81,4 +83,11 @@ public class BookingController {
         return bookingService.approveBooking(bookingDto.getId());
     }
 
+     /***
+     * 	   Зарыг grid-р сервис
+     */
+    @PostMapping("/bookings/grid")
+    public ResponseEntity<GridResponse> getGrid(@RequestBody GridRequest request) {
+        return ResponseEntity.ok(bookingService.getGrid(request));
+    }
 }
