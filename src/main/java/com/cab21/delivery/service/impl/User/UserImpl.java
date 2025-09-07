@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.cab21.delivery.dto.UserDto;
@@ -76,60 +76,54 @@ public class UserImpl implements UserService {
         return "success";
     }
 
-    @Transactional
-    public LoginResponse updateUser(UpdateUserRequest req) {
-        if (req.getId() == null) {
-            throw new IllegalArgumentException("id is required");
-        }
-
-        User u = users.findById(req.getId())
-                .orElseThrow(() -> new IllegalArgumentException("user not found"));
-        // username
-        if (req.getUsername() != null) {
-            String newUsername = req.getUsername().trim();
-            if (newUsername.isBlank()) {
-                throw new IllegalArgumentException("username cannot be blank");
-            }
-            if (users.existsByUsernameAndIdNot(newUsername, u.getId())) {
-                throw new IllegalArgumentException("username already exists");
-            }
-            u.setUsername(newUsername);
-        }
-
-        if (req.getPassword() != null) {
-            String pw = req.getPassword().trim();
-            if (pw.isBlank()) {
-                throw new IllegalArgumentException("password cannot be blank");
-            }
-            u.setPasswordHash(encoder.encode(pw));
-        }
-
-        u.setFirstName(req.getFirstName());
-        u.setLastName(req.getLastName());
-        u.setBirthday(req.getBirthday());
-        u.setRegistryNumber(req.getRegistryNumber());
-        if(req.getPhone() != null){
-            u.setPhone(req.getPhone());
-            u.setUsername(req.getPhone());
-        }
-        
-        users.save(u);
-        Authentication auth = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
-
-        String token = jwtService.generateToken(
-                u.getUsername(),
-                Map.of("role", u.getRole(), "uid", u.getId())
-        );
-
-        UserDto dto = toDto(u);
-
-        return LoginResponse.builder()
-                .token(token)
-                .type("Bearer")
-                .user(dto)
-                .build();
+   @Override
+@Transactional
+public LoginResponse updateUser(UpdateUserRequest req) {
+    if (req.getId() == null) {
+        throw new IllegalArgumentException("id is required");
     }
+
+    User u = users.findById(req.getId())
+        .orElseThrow(() -> new IllegalArgumentException("user not found"));
+
+    if (StringUtils.hasText(req.getPassword())) {
+        String pw = req.getPassword().trim();
+        u.setPasswordHash(encoder.encode(pw));
+    }
+    u.setFirstName(req.getFirstName());
+    u.setLastName(req.getLastName());
+    u.setBirthday(req.getBirthday());
+    u.setRegistryNumber(req.getRegistryNumber());
+
+    if (StringUtils.hasText(req.getPhone())) {
+        String phone = req.getPhone().trim();
+        u.setPhone(phone);
+        u.setUsername(phone);
+    }
+
+    users.saveAndFlush(u); 
+
+    if (StringUtils.hasText(req.getPassword())) {
+        authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                u.getUsername(),           // use persisted principal
+                req.getPassword().trim()   // use new raw password
+            )
+        );
+    }
+
+    String token = jwtService.generateToken(
+        u.getUsername(),
+        Map.of("role", u.getRole(), "uid", u.getId())
+    );
+
+    UserDto dto = toDto(u);
+    return LoginResponse.builder()
+        .token(token)
+        .type("Bearer")
+        .user(dto)
+        .build();
+}
 
     private static UserDto toDto(User u) {
         return UserDto.builder()

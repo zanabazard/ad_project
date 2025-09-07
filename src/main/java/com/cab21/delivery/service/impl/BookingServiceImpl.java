@@ -1,5 +1,6 @@
 package com.cab21.delivery.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -20,6 +21,9 @@ import com.cab21.delivery.repository.UserRepository;
 import com.cab21.delivery.service.BookingService;
 
 import lombok.RequiredArgsConstructor;
+import nm.common.grid.repo.GridRepo;
+import nm.common.grid.request.GridRequest;
+import nm.common.grid.response.GridResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,8 @@ public class BookingServiceImpl implements BookingService {
     private final RideRepository rideRepo;
     private final BookingRepository bookingRepo;
     private final UserRepository userRepo;
+    @Autowired
+    GridRepo gridRepo;
 
     @Override
     @Transactional
@@ -76,12 +82,14 @@ public class BookingServiceImpl implements BookingService {
 
         Ride r = b.getRide();
         if (!"OPEN".equalsIgnoreCase(r.getStatus())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ride is not OPEN");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Явахад нээлттэй болоогүй байна");
         }
 
         b.setStatus("APPROVED");
         bookingRepo.save(b);
-
+        if(r.getPassengerCount() + b.getSeat() > r.getCapacity()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Дүүрэн байна");
+        }
         r.setPassengerCount(r.getPassengerCount() + b.getSeat());
         if (r.getPassengerCount() >= r.getCapacity()) {
             r.setStatus("FULL");
@@ -126,5 +134,26 @@ public class BookingServiceImpl implements BookingService {
         rideRepo.save(r);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public GridResponse getGrid(GridRequest request) {
+   String sql = """
+       SELECT
+            b.id AS id,                 
+            b.ride_id AS ride_id,
+            b.user_id AS user_id,
+            b.status AS status,
+            b.seat AS seat,
+            DATE_FORMAT(b.created_at, '%Y-%m-%d %H:%i:%s') as created_at,
+            u.first_name AS first_name,
+            u.last_name AS last_name,
+            u.phone AS phone
+        FROM bookings b
+        LEFT JOIN rides r ON b.ride_id = r.id
+        LEFT JOIN users u ON u.id = b.user_id
+        GROUP BY b.id
+        """;
+        return gridRepo.getDatatable(sql, request, true);
     }
 }
