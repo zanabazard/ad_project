@@ -89,7 +89,9 @@ public class RideImpl implements RideService {
             c.model,
             r.capacity,
             r.passenger_count,
-            u.phone as phone
+            u.phone as phone,
+            u.id as driver_id,
+            c.id as cab_id
         FROM rides r
         LEFT JOIN bookings b ON b.ride_id = r.id
         LEFT JOIN cabs c ON c.id = r.cab_id
