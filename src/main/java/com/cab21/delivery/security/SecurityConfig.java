@@ -42,10 +42,24 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/user/create","/api/rides/checklist/grid").permitAll()
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
-                        .anyRequest().authenticated())
+                    .requestMatchers(HttpMethod.POST, "/api/auth/login", "/cab21/api/auth/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/user/create","/api/rides/checklist/grid").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                    .anyRequest().authenticated()
+                )
+                 .exceptionHandling(ex -> ex
+                    .authenticationEntryPoint((req, res, e) -> { // unauthenticated → 401
+                        res.setStatus(401);
+                        res.setContentType("application/json");
+                        res.getWriter().write("{\"error\":\"unauthorized\"}");
+                    })
+                    .accessDeniedHandler((req, res, e) -> { // authenticated but not allowed → 403
+                        res.setStatus(403);
+                        res.setContentType("application/json");
+                        res.getWriter().write("{\"error\":\"forbidden\"}");
+                    })
+                )
+
                
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
