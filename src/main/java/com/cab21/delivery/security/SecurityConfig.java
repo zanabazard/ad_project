@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.POST, "/api/auth/login", "/cab21/api/auth/login").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/user/create","/api/rides/checklist/grid").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/user/create","/api/rides/checklist/grid","/api/user/change-password").permitAll()
                     .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                     .anyRequest().authenticated()
                 )
