@@ -20,7 +20,7 @@ public class CreateRideRequest {
 
     private String startPlace;
     private String endPlace;
-    private Integer passengerSeat;
+    private int passengerSeat;
     private BigDecimal ticketPrice;
     private String status;
 }
