@@ -123,8 +123,7 @@ public class RideImpl implements RideService {
         r.setStartPlace(req.getStartPlace());
         r.setEndPlace(req.getEndPlace());
         r.setTicketPrice(req.getTicketPrice());
-        r.setStatus(req.getStatus());
-
+        r.setStatus("OPEN");
         rideRepo.save(r);
         return ResponseEntity.ok(RideDto.from(r));
     }
