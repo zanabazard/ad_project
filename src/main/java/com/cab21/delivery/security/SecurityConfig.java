@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.POST, "/api/auth/login", "/cab21/api/auth/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/user/create","/api/rides/checklist/grid","/api/user/change-password").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/actuator/health","/api/aimags","/api/soums/**").permitAll()
                     .anyRequest().authenticated()
                 )
                  .exceptionHandling(ex -> ex
