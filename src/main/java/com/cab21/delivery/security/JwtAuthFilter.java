@@ -24,17 +24,23 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;               // <-- keep
     private final UserDetailsService userDetailsService; // <-- keep
 
-    @Override
+   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-      String path = request.getRequestURI(); // includes /cab21
 
-      return path.equals("/api/auth/login") || path.equals("/cab21/api/auth/login")
-          || path.equals("/api/user/create") || path.equals("/cab21/api/user/create")
-          || path.equals("/actuator/health") || path.equals("/cab21/actuator/health")
-          || path.equals("/api/rides/checklist/grid") || path.equals("/cab21/api/rides/checklist/grid")
-          || path.equals("/api/user/change-password") || path.equals("/cab21/api/user/change-password")
-          || path.equals("/api/aimags") || path.equals("/cab21/api/aimags")
-          || path.startsWith("/api/soums/") || path.startsWith("/cab21/api/soums/");
+      String path = request.getRequestURI();   // <-- IMPORTANT (not getServletPath)
+
+      // remove context path if present
+      if (path.startsWith("/cab21")) {
+          path = path.substring(6);
+      }
+
+      return path.equals("/api/auth/login")
+          || path.equals("/api/user/create")
+          || path.equals("/actuator/health")
+          || path.equals("/api/rides/checklist/grid")
+          || path.equals("/api/user/change-password")
+          || path.equals("/api/aimags")
+          || path.startsWith("/api/soums/");
   }
 
     @Override
