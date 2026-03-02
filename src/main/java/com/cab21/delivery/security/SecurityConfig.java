@@ -42,18 +42,17 @@ public class SecurityConfig {
         .cors(Customizer.withDefaults())
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(HttpMethod.POST,
+             .requestMatchers(
                 "/api/auth/login",
-                "/cab21/api/auth/login",
-
                 "/api/user/create",
-                "/cab21/api/user/create",
-
+                "/api/user/create/**",
                 "/api/rides/checklist/grid",
-                "/cab21/api/rides/checklist/grid",
-
                 "/api/user/change-password",
-                "/cab21/api/user/change-password"
+                "/actuator/health",
+                "/api/aimags",
+                "/api/soums/**",
+                "/error",
+                "/error/**"
             ).permitAll()
 
             .requestMatchers(HttpMethod.GET,
