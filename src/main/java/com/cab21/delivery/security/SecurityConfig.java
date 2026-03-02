@@ -42,11 +42,21 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(HttpMethod.POST, "/api/auth/login", "/cab21/api/auth/login").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/user/create","/api/rides/checklist/grid","/api/user/change-password","/cab21/api/user/create").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/actuator/health","/api/aimags","/api/soums/**").permitAll()
-                    .anyRequest().authenticated()
-                )
+                .requestMatchers(HttpMethod.POST,
+                    "/cab21/api/auth/login",
+                    "/cab21/api/user/create",
+                    "/cab21/api/rides/checklist/grid",
+                    "/cab21/api/user/change-password"
+                ).permitAll()
+
+                .requestMatchers(HttpMethod.GET,
+                    "/cab21/actuator/health",
+                    "/cab21/api/aimags",
+                    "/cab21/api/soums/**"
+                ).permitAll()
+
+                .anyRequest().authenticated()
+            )
                  .exceptionHandling(ex -> ex
                     .authenticationEntryPoint((req, res, e) -> { // unauthenticated → 401
                         res.setStatus(401);
