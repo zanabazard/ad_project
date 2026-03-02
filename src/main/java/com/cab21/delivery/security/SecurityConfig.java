@@ -45,10 +45,8 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ important
 
         .requestMatchers(HttpMethod.POST,
-            "/api/user/create",
-            "/cab21/api/user/create",
             "/api/auth/login",
-            "/cab21/api/auth/login",
+            "/api/user/create",
             "/api/rides/checklist/grid",
             "/api/user/change-password"
         ).permitAll()
