@@ -30,13 +30,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     String ctx = request.getContextPath();     // e.g. /cab21
     String path = uri.startsWith(ctx) ? uri.substring(ctx.length()) : uri; // -> /api/user/create
 
-    return path.equals("/api/auth/login")
-        || path.equals("/api/user/create")
-        || path.equals("/actuator/health")
-        || path.equals("/api/rides/checklist/grid")
-        || path.equals("/api/user/change-password")
-        || path.equals("/api/aimags")
-        || path.startsWith("/api/soums/");
+    return p.equals("/cab21/api/user/create") || p.equals("/api/user/create")
+      || p.equals("/cab21/api/auth/login") || p.equals("/api/auth/login")
+      || p.equals("/cab21/actuator/health") || p.equals("/actuator/health")
+      || p.startsWith("/cab21/api/soums/") || p.startsWith("/api/soums/");
   }
 
     @Override
