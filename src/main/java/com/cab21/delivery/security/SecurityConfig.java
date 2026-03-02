@@ -43,16 +43,23 @@ public class SecurityConfig {
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.POST,
-            "/api/auth/login",        "/cab21/api/auth/login",
-            "/api/user/create",       "/cab21/api/user/create",
-            "/api/rides/checklist/grid", "/cab21/api/rides/checklist/grid",
-            "/api/user/change-password", "/cab21/api/user/change-password"
+            "/api/auth/login",
+            "/api/user/create",
+            "/cab21/api/auth/login",
+            "/cab21/api/user/create",
+            "/api/rides/checklist/grid",
+            "/cab21/api/rides/checklist/grid",
+            "/api/user/change-password",
+            "/cab21/api/user/change-password"
         ).permitAll()
 
         .requestMatchers(HttpMethod.GET,
-            "/actuator/health",       "/cab21/actuator/health",
-            "/api/aimags",            "/cab21/api/aimags",
-            "/api/soums/**",          "/cab21/api/soums/**"
+            "/actuator/health",
+            "/cab21/actuator/health",
+            "/api/aimags",
+            "/cab21/api/aimags",
+            "/api/soums/**",
+            "/cab21/api/soums/**"
         ).permitAll()
 
         .anyRequest().authenticated()
