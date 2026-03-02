@@ -26,21 +26,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
    @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-      String path = request.getRequestURI();   // includes /cab21
-      String ctx  = request.getContextPath();  // /cab21
+      String path = request.getRequestURI(); // includes /cab21 if present
 
-      if (ctx != null && !ctx.isEmpty() && path.startsWith(ctx)) {
-          path = path.substring(ctx.length()); // now /api/user/create
-      }
-
-      return path.equals("/api/auth/login")
-          || path.equals("/api/user/create")
-          || path.equals("/actuator/health")
-          || path.equals("/api/rides/checklist/grid")
-          || path.equals("/api/user/change-password")
-          || path.equals("/api/aimags")
-          || path.startsWith("/api/soums/");
-}
+      return path.equals("/api/auth/login") || path.equals("/cab21/api/auth/login")
+          || path.equals("/api/user/create") || path.equals("/cab21/api/user/create")
+          || path.equals("/actuator/health") || path.equals("/cab21/actuator/health")
+          || path.equals("/api/rides/checklist/grid") || path.equals("/cab21/api/rides/checklist/grid")
+          || path.equals("/api/user/change-password") || path.equals("/cab21/api/user/change-password")
+          || path.equals("/api/aimags") || path.equals("/cab21/api/aimags")
+          || path.startsWith("/api/soums/") || path.startsWith("/cab21/api/soums/");
+  }
 
     @Override
   protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)

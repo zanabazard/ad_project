@@ -15,11 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,38 +36,57 @@ public class SecurityConfig {
     }
 
     @Bean
-    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
-        return new MvcRequestMatcher.Builder(introspector);
-    }
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable())
+        .cors(Customizer.withDefaults())
+        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(HttpMethod.POST,
+                "/api/auth/login",
+                "/cab21/api/auth/login",
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .cors(Customizer.withDefaults())
-            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/auth/login")).permitAll()
-                .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/user/create")).permitAll()
-                .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/rides/checklist/grid")).permitAll()
-                .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/user/change-password")).permitAll()
+                "/api/user/create",
+                "/cab21/api/user/create",
 
-                .requestMatchers(mvc.pattern(HttpMethod.GET, "/actuator/health")).permitAll()
-                .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/aimags")).permitAll()
-                .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/soums/**")).permitAll()
+                "/api/rides/checklist/grid",
+                "/cab21/api/rides/checklist/grid",
 
-                .anyRequest().authenticated()
-            )
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint((req, res, e) -> {
-                    res.setStatus(401);
-                    res.setContentType("application/json");
-                    res.getWriter().write("{\"error\":\"unauthorized\"}");
-                })
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                "/api/user/change-password",
+                "/cab21/api/user/change-password"
+            ).permitAll()
 
-        return http.build();
+            .requestMatchers(HttpMethod.GET,
+                "/actuator/health",
+                "/cab21/actuator/health",
+
+                "/api/aimags",
+                "/cab21/api/aimags",
+
+                "/api/soums/**",
+                "/cab21/api/soums/**",
+
+                "/error",            // IMPORTANT
+                "/cab21/error"       // IMPORTANT
+            ).permitAll()
+
+            .anyRequest().authenticated()
+        )
+        .exceptionHandling(ex -> ex
+        .authenticationEntryPoint((req, res, e) -> {
+            res.setStatus(401);
+            res.setContentType("application/json");
+            res.getWriter().write("{\"error\":\"unauthorized\"}");
+        })
+        .accessDeniedHandler((req, res, e) -> {
+            res.setStatus(403);
+            res.setContentType("application/json");
+            res.getWriter().write("{\"error\":\"forbidden\"}");
+        })
+        )
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
     }
 
     @Bean
