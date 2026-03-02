@@ -24,14 +24,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;               // <-- keep
     private final UserDetailsService userDetailsService; // <-- keep
 
-    @Override
+   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-
-      String path = request.getRequestURI();      // full URI (may include /cab21)
-      String ctx  = request.getContextPath();     // "/cab21" (or "")
+      String path = request.getRequestURI();   // includes /cab21
+      String ctx  = request.getContextPath();  // /cab21
 
       if (ctx != null && !ctx.isEmpty() && path.startsWith(ctx)) {
-          path = path.substring(ctx.length());    // now it becomes "/api/user/create"
+          path = path.substring(ctx.length()); // now /api/user/create
       }
 
       return path.equals("/api/auth/login")
@@ -41,7 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
           || path.equals("/api/user/change-password")
           || path.equals("/api/aimags")
           || path.startsWith("/api/soums/");
-  }
+}
 
     @Override
   protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
