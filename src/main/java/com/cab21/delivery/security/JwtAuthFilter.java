@@ -26,20 +26,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-      String path = request.getRequestURI(); // full path (can include /cab21)
+    String uri = request.getRequestURI();      // e.g. /cab21/api/user/create
+    String ctx = request.getContextPath();     // e.g. /cab21
+    String path = uri.startsWith(ctx) ? uri.substring(ctx.length()) : uri; // -> /api/user/create
 
-      // normalize: remove /cab21 prefix if present
-      if (path.startsWith("/cab21")) {
-          path = path.substring("/cab21".length());
-      }
-
-      return path.equals("/api/auth/login")
-          || path.equals("/api/user/create")
-          || path.equals("/actuator/health")
-          || path.equals("/api/rides/checklist/grid")
-          || path.equals("/api/user/change-password")
-          || path.equals("/api/aimags")
-          || path.startsWith("/api/soums/");
+    return path.equals("/api/auth/login")
+        || path.equals("/api/user/create")
+        || path.equals("/actuator/health")
+        || path.equals("/api/rides/checklist/grid")
+        || path.equals("/api/user/change-password")
+        || path.equals("/api/aimags")
+        || path.startsWith("/api/soums/");
   }
 
     @Override

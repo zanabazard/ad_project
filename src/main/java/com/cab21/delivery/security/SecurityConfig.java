@@ -37,43 +37,43 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(Customizer.withDefaults())
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-               .requestMatchers(HttpMethod.POST,
-                    "/api/auth/login",          "/cab21/api/auth/login",
-                    "/api/user/create",         "/cab21/api/user/create",
-                    "/api/rides/checklist/grid","/cab21/api/rides/checklist/grid",
-                    "/api/user/change-password","/cab21/api/user/change-password"
-                ).permitAll()
+    http
+        .csrf(csrf -> csrf.disable())
+        .cors(Customizer.withDefaults())
+        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ important
 
-                .requestMatchers(HttpMethod.GET,
-                    "/actuator/health",         "/cab21/actuator/health",
-                    "/api/aimags",              "/cab21/api/aimags",
-                    "/api/soums/**",            "/cab21/api/soums/**"
-                ).permitAll()
+        .requestMatchers(HttpMethod.POST,
+            "/api/auth/login",
+            "/api/user/create",
+            "/api/rides/checklist/grid",
+            "/api/user/change-password"
+        ).permitAll()
 
-                .anyRequest().authenticated()
-            )
-                 .exceptionHandling(ex -> ex
-                    .authenticationEntryPoint((req, res, e) -> { // unauthenticated → 401
-                        res.setStatus(401);
-                        res.setContentType("application/json");
-                        res.getWriter().write("{\"error\":\"unauthorized\"}");
-                    })
-                    .accessDeniedHandler((req, res, e) -> { // authenticated but not allowed → 403
-                        res.setStatus(403);
-                        res.setContentType("application/json");
-                        res.getWriter().write("{\"error\":\"forbidden\"}");
-                    })
-                )
+        .requestMatchers(HttpMethod.GET,
+            "/actuator/health",
+            "/api/aimags",
+            "/api/soums/**"
+        ).permitAll()
 
-               
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        .anyRequest().authenticated()
+        )
+        .exceptionHandling(ex -> ex
+        .authenticationEntryPoint((req, res, e) -> {
+            res.setStatus(401);
+            res.setContentType("application/json");
+            res.getWriter().write("{\"error\":\"unauthorized\"}");
+        })
+        .accessDeniedHandler((req, res, e) -> {
+            res.setStatus(403);
+            res.setContentType("application/json");
+            res.getWriter().write("{\"error\":\"forbidden\"}");
+        })
+        )
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
+    return http.build();
     }
 
     @Bean
