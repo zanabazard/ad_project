@@ -26,7 +26,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-      String path = request.getServletPath();  // this will be like /api/user/create
+      // remove context-path safely
+      String path = request.getRequestURI();
+      String ctx = request.getContextPath(); // maybe "/cab21" or ""
+      if (ctx != null && !ctx.isBlank() && path.startsWith(ctx)) {
+          path = path.substring(ctx.length());
+      }
+
       return path.equals("/api/auth/login")
           || path.equals("/api/user/create")
           || path.equals("/actuator/health")
