@@ -42,23 +42,21 @@ public class SecurityConfig {
         .cors(Customizer.withDefaults())
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ important
-
         .requestMatchers(HttpMethod.POST,
-            "/api/auth/login",
-            "/api/user/create",
-            "/api/rides/checklist/grid",
-            "/api/user/change-password"
+            "/api/auth/login",        "/cab21/api/auth/login",
+            "/api/user/create",       "/cab21/api/user/create",
+            "/api/rides/checklist/grid", "/cab21/api/rides/checklist/grid",
+            "/api/user/change-password", "/cab21/api/user/change-password"
         ).permitAll()
 
         .requestMatchers(HttpMethod.GET,
-            "/actuator/health",
-            "/api/aimags",
-            "/api/soums/**"
+            "/actuator/health",       "/cab21/actuator/health",
+            "/api/aimags",            "/cab21/api/aimags",
+            "/api/soums/**",          "/cab21/api/soums/**"
         ).permitAll()
 
         .anyRequest().authenticated()
-        )
+    )
         .exceptionHandling(ex -> ex
         .authenticationEntryPoint((req, res, e) -> {
             res.setStatus(401);
