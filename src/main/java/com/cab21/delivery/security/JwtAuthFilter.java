@@ -25,12 +25,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService; // <-- keep
 
      @Override
-    protected boolean shouldNotFilter(HttpServletRequest req) {
-    String p = req.getServletPath();
-    return "/api/auth/login".equals(p)
-        || "/cab21/api/auth/login".equals(p)
-        || "/actuator/health".equals(p)
-        || "OPTIONS".equalsIgnoreCase(req.getMethod());
+  protected boolean shouldNotFilter(HttpServletRequest request) {
+      String path = request.getServletPath(); // usually WITHOUT /cab21
+      return path.equals("/api/auth/login")
+          || path.equals("/api/user/create")
+          || path.equals("/actuator/health")
+          || path.startsWith("/api/aimags")
+          || path.startsWith("/api/soums");
   }
 
     @Override
